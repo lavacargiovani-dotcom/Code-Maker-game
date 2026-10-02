@@ -1,0 +1,17 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coin Rush</title><style>*{box-sizing:border-box}body{margin:0;background:#080b16;color:#fff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}main{width:min(96vw,900px);text-align:center}h1{margin:6px}.hud{display:flex;justify-content:space-between;margin:8px;font-weight:bold}.game{position:relative;margin:auto;background:#111827;border:2px solid #334155;border-radius:14px;overflow:hidden;width:min(94vw,800px);height:min(70vh,600px)}canvas{width:100%;height:100%;display:block}button{padding:11px 18px;border:0;border-radius:10px;background:#38bdf8;font-weight:bold;cursor:pointer;font-size:16px}#msg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:#0009;font-size:28px;font-weight:bold}#msg button{margin-top:14px}p{opacity:.85}</style></head><body><main><h1>🎮 Coin Rush</h1><p>Colete moedas enquanto corre. Controles: toque/clique e teclado quando indicado.</p><div class="hud"><span>Pontos: <b id="score">0</b></span><span>Recorde: <b id="best">0</b></span></div><div class="game"><canvas id="c" width="800" height="600"></canvas><div id="msg"></div></div><button onclick="restart()">🔄 Reiniciar</button></main><script>
+const c=document.getElementById('c'),x=c.getContext('2d'),W=c.width,H=c.height,scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),overlay=document.getElementById('msg');
+let score=0,best=+localStorage.getItem('best_coins')||0,over=false,last=0,keys={};
+bestEl.textContent=best;
+onkeydown=e=>{keys[e.key]=true;if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();};
+onkeyup=e=>keys[e.key]=false;
+c.onpointerdown=()=>{click();};
+function click(){};
+function end(){if(over)return;over=true;if(score>best){best=score;localStorage.setItem('best_coins',best)}bestEl.textContent=best;overlay.style.display='flex';overlay.innerHTML='💥 GAME OVER<br><small>Pontuação: '+score+'</small><br><button onclick="restart()">Jogar novamente</button>';}
+function restart(){location.reload()}
+function sc(v=1){score+=v;scoreEl.textContent=score}
+function rect(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function loop(t){let dt=Math.min((t-last)/16,2);last=t; if(!over)update(dt);draw();requestAnimationFrame(loop)}
+function update(dt){}
+function draw(){x.clearRect(0,0,W,H);x.fillStyle='#0f172a';x.fillRect(0,0,W,H);}
+requestAnimationFrame(loop);
+</script></body></html>
